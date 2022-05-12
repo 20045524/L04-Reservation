@@ -1,7 +1,9 @@
 package sg.edu.rp.c346.id20045524.l04_reservation;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnReserve;
     Button btnReset;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         tp = findViewById(R.id.displayTime);
         btnReserve = findViewById(R.id.buttonReserve);
         btnReset = findViewById(R.id.buttonReset);
-        dp.updateDate(2020,6, 1);
+        dp.updateDate(2020,5, 1);
         tp.setCurrentHour(19);
         tp.setCurrentMinute(30);
 
@@ -106,6 +110,20 @@ public class MainActivity extends AppCompatActivity {
                 } else if (hourOfDay > 20) {
                     tp.setCurrentHour(20);
 
+                }
+            }
+        });
+
+        dp.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(DatePicker v, int year, int monthOfYear, int dayOfMonth) {
+                LocalDate today = LocalDate.now();
+
+                year = dp.getYear();
+                monthOfYear = dp.getMonth() ;
+                dayOfMonth = dp.getDayOfMonth();
+                if (year < today.getYear() && monthOfYear < today.getMonthValue() && dayOfMonth < today.getDayOfMonth()){
+                    dp.updateDate(today.getYear(), today.getMonthValue(), today.getDayOfMonth()+1);
                 }
             }
         });
